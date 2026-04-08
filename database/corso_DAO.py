@@ -71,3 +71,46 @@ class corso_DAO:
         cnx.close()
         return res
 
+    # controllo esistenza studente
+    @staticmethod
+    def getStudenteByMatricola(matricola):
+        cnx = DB_connect.get_connection()
+        cursor = cnx.cursor(dictionary=True)
+
+        query = """SELECT *
+                   FROM studente 
+                   where matricola = %s"""
+
+        cursor.execute(query, (matricola,))
+
+        res = []
+        for row in cursor:
+            res.append(Studente(**row))
+
+        cursor.close()
+        cnx.close()
+        return res
+
+
+    # corsi dello studente
+    @staticmethod
+    def getCorsiStudente(matricola):
+        cnx = DB_connect.get_connection()
+        cursor = cnx.cursor(dictionary=True)
+
+        # "prendi tutti i corsi a cui lo studente è iscritto"
+        query = """SELECT c.*
+                   FROM corso c, iscrizione i
+                   where c.codins = i.codins
+                    and i.matricola = %s"""
+
+        cursor.execute(query, (matricola,))
+
+        res = []
+        for row in cursor:
+            res.append(Corso(**row))
+
+        cursor.close()
+        cnx.close()
+        return res
+

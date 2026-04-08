@@ -13,3 +13,9 @@ class Model:
 
     def getCercaStudente(self, matricola):
         return corso_DAO.getCercaStudente(matricola)
+
+    def getStudenteByMatricola(self, matricola):
+        return corso_DAO.getStudenteByMatricola(matricola)
+
+    def getCorsiStudente(self, matricola):
+        return corso_DAO.getCorsiStudente(matricola)
