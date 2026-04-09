@@ -139,5 +139,45 @@ class Controller:
 
         self._view.update_page()
 
-    def handleIscrivi(self,e):
-        pass
+    # PUNTO 5
+    def handleIscrivi(self, e):
+        self._view.txt_result.controls.clear()
+
+        # prendo il valore scritto dall'utente
+        matricola = self._view._txt_input_m.value
+
+        # 1️⃣ controllo input
+        if matricola is None or matricola == "":
+            self._view.create_alert("Inserire una matricola!")
+            return
+
+        # prendo il valore selezionato dall'utente
+        codins = self._SelezionareCorsoValue.codins
+
+        # 2️⃣ controllo corso selezionato, se è None non ha selezionato niente nel dropdown
+        if codins is None:
+            self._view.create_alert("Selezionare un corso!")
+            return
+
+        # prendo lo studente in considerazione
+        studente = self._model.getStudenteByMatricola(matricola)
+
+        # 3️⃣ controllo studente esiste
+        if not studente:
+            self._view.create_alert("Studente non trovato!")
+            return
+
+        # 4️⃣ controllo che lo studente non sia già iscritto, evito duplicati
+        if self._model.getIsIscritto(matricola, codins):
+            self._view.create_alert("Studente già iscritto a questo corso!")
+            return
+
+        # 5️⃣ se ho passato tutti i controlli iscrivo lo studente al corso col metodo nel DAO
+        self._model.iscriviStudente(codins, matricola)
+
+        # 6️⃣ feedback
+        self._view.txt_result.controls.append(
+            ft.Text(f"Studente {matricola} iscritto al corso {codins}")
+        )
+
+        self._view.update_page()
