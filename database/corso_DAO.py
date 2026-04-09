@@ -54,18 +54,15 @@ class corso_DAO:
         cnx = DB_connect.get_connection()
         cursor = cnx.cursor(dictionary=True)
 
-        query = """SELECT s.cognome, s.nome
-                    FROM studente s
-                    where matricola = %s"""
+        query = """SELECT *
+                   FROM studente
+                   WHERE matricola = %s"""
 
         cursor.execute(query, (matricola,))
 
         res = []
         for row in cursor:
-            res.append(Studente(
-                cognome=row["cognome"],
-                nome=row["nome"]
-            ))
+            res.append(Studente(**row))
 
         cursor.close()
         cnx.close()
@@ -115,40 +112,40 @@ class corso_DAO:
         return res
 
 
-# PUNTO 5 --> obiettivo: iscrivere uno studente al corso cioè scrivere
-# una riga nel database cosi: iscrizione(matricola, codins)
+    # PUNTO 5 --> obiettivo: iscrivere uno studente al corso cioè scrivere
+    # una riga nel database cosi: iscrizione(matricola, codins)
 
-@staticmethod
-def getIscriviStudente(codins, matricola):
-    cnx = DB_connect.get_connection()
-    cursor = cnx.cursor(dictionary=True)
+    @staticmethod
+    def getIscriviStudente(codins, matricola):
+        cnx = DB_connect.get_connection()
+        cursor = cnx.cursor(dictionary=True)
 
-    #questa query aggiunge una nuova riga nella tabella iscrizione
-    query = """INSERT INTO iscrizione (matricola, codins)
+        #questa query aggiunge una nuova riga nella tabella iscrizione
+        query = """INSERT INTO iscrizione (matricola, codins)
                VALUES (%s, %s)"""
 
-    cursor.execute(query, (matricola, codins)) #esecuzione (manda la query al database)
-    cnx.commit()  # IMPORTANTISSIMO (la query viene salvata nel database)
+        cursor.execute(query, (matricola, codins)) #esecuzione (manda la query al database)
+        cnx.commit()  # IMPORTANTISSIMO (la query viene salvata nel database)
 
-    cursor.close()
-    cnx.close()
+        cursor.close()
+        cnx.close()
 
-# aggiungo questo controllo extra per evitare i duplicati
-@staticmethod
-def getIsIscritto(matricola, codins):
-    cnx = DB_connect.get_connection()
-    cursor = cnx.cursor(dictionary=True)
+    # aggiungo questo controllo extra per evitare i duplicati
+    @staticmethod
+    def getIsIscritto(matricola, codins):
+        cnx = DB_connect.get_connection()
+        cursor = cnx.cursor(dictionary=True)
 
-    # query evita duplicati, rischio di inserire una riga già presente
-    query = """SELECT *
-               FROM iscrizione
-               WHERE matricola = %s AND codins = %s"""
+        # query evita duplicati, rischio di inserire una riga già presente
+        query = """SELECT *
+                   FROM iscrizione
+                   WHERE matricola = %s AND codins = %s"""
 
-    cursor.execute(query, (matricola, codins))
+        cursor.execute(query, (matricola, codins))
 
-    res = cursor.fetchall()
+        res = cursor.fetchall()
 
-    cursor.close()
-    cnx.close()
-    # il return mi darà True se è già iscritto e False se posso iscrivere
-    return len(res) > 0
+        cursor.close()
+        cnx.close()
+        # il return mi darà True se è già iscritto e False se posso iscrivere
+        return len(res) > 0

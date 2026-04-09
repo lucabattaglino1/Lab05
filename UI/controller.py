@@ -131,7 +131,9 @@ class Controller:
             return
 
         # se va tutto bene stampo i corsi
-        self._view.txt_result.controls.append(f"I corsi dello studente {matricola}:")
+        self._view.txt_result.controls.append(
+            ft.Text(f"I corsi dello studente {matricola}:")
+        )
 
         # ogni c è un oggetto corso da stampare
         for c in corsi:
@@ -151,13 +153,13 @@ class Controller:
             self._view.create_alert("Inserire una matricola!")
             return
 
-        # prendo il valore selezionato dall'utente
-        codins = self._SelezionareCorsoValue.codins
-
         # 2️⃣ controllo corso selezionato, se è None non ha selezionato niente nel dropdown
-        if codins is None:
+        if self._SelezionareCorsoValue is None:
             self._view.create_alert("Selezionare un corso!")
             return
+
+        # prendo il valore selezionato dall'utente
+        codins = self._SelezionareCorsoValue.codins
 
         # prendo lo studente in considerazione
         studente = self._model.getStudenteByMatricola(matricola)
@@ -173,7 +175,7 @@ class Controller:
             return
 
         # 5️⃣ se ho passato tutti i controlli iscrivo lo studente al corso col metodo nel DAO
-        self._model.iscriviStudente(codins, matricola)
+        self._model.getIscriviStudente(codins, matricola)
 
         # 6️⃣ feedback
         self._view.txt_result.controls.append(
