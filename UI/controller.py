@@ -23,21 +23,22 @@ class Controller:
         for c in self._corsi:
             self._view.SelezionareCorso.options.append(
                 ft.dropdown.Option(
-                    key=c.codins,
-                    text=f"{c.nome} ({c.codins})"
+                    key=c.codins, # valore reale
+                    text=f"{c.nome} ({c.codins})" # ciò che vedo
                 )
             )
 
         # aggiorno la UI
         self._view.update_page()
 
+    # metodo per prendere il corso selezionato
     def handleSelezioneCorso(self, e):
         codins = e.control.value
 
         # cerco il corso selezionato
         for c in self._corsi:
-            if c.codins == codins:
-                self._SelezionareCorsoValue = c
+            if c.codins == codins: # trovo l'oggetto corso
+                self._SelezionareCorsoValue = c # lo salvo
                 break
 
         print(self._SelezionareCorsoValue)
@@ -111,8 +112,7 @@ class Controller:
             self._view.create_alert("Inserire la matricola")
             return
 
-        # controllo se lo studente esiste
-        # chiamo il model e il model chiama il DAO
+        # prendo lo studente con la matricola scritta dall'utente
         studente = self._model.getStudenteByMatricola(matricola)
 
         # se lo studente non esiste finisce tutto qui
@@ -120,7 +120,7 @@ class Controller:
             self._view.create_alert("Studente non trovato!")
             return
 
-        # recupero i corsi chiamando model e a sua volta DAO
+        # recupero i corsi con la matricola scritta dall'utente
         corsi = self._model.getCorsiStudente(matricola)
 
         # qui lo studente esiste ma non iscritto a nessun corso

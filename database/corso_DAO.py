@@ -6,6 +6,7 @@ from database.DB_connect import get_connection
 
 class corso_DAO:
 
+    # per popolare il dropdown corsi
     @staticmethod
     def getAllCorsi():
         cnx = DB_connect.get_connection()
@@ -57,6 +58,7 @@ class corso_DAO:
         query = """SELECT *
                    FROM studente
                    WHERE matricola = %s"""
+        # risultato --> [Studente("123", "Rossi", "Mario", "INFO")]
 
         cursor.execute(query, (matricola,))
 
